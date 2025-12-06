@@ -1,0 +1,1525 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام إدارة مخزون البطاريات</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100%;
+            height: 100%;
+        }
+        
+        html {
+            height: 100%;
+        }
+
+        .auth-container {
+            width: 100%;
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        }
+
+        .auth-card {
+            background: #1a1a1a;
+            border-radius: 25px;
+            box-shadow: 0 25px 70px rgba(255, 193, 7, 0.3);
+            max-width: 450px;
+            width: 100%;
+            padding: 3rem 2.5rem;
+            border: 3px solid #FFC107;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-container img {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px rgba(255, 193, 7, 0.5));
+        }
+
+        .system-title {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(255, 193, 7, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #FFC107;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #333;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #000;
+            color: #FFC107;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #FFC107;
+            background: #1a1a1a;
+            box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.2);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1.1rem;
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 193, 7, 0.5);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #000;
+            color: #FFC107;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            display: none;
+            border: 2px solid #FFC107;
+        }
+
+        .main-container {
+            display: none;
+            width: 100%;
+            min-height: 100%;
+            background: #000;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(255, 193, 7, 0.3);
+            border-bottom: 3px solid #FFC107;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo img {
+            height: 55px;
+            width: auto;
+            filter: drop-shadow(0 0 15px rgba(255, 193, 7, 0.6));
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-badge {
+            background: #FFC107;
+            color: #000;
+            padding: 0.6rem 1.3rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .btn-logout {
+            background: #000;
+            color: #FFC107;
+            border: 2px solid #FFC107;
+            padding: 0.6rem 1.3rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #FFC107;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-section {
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+            transition: all 0.3s;
+            border: 2px solid #333;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(255, 193, 7, 0.4);
+            border-color: #FFC107;
+        }
+
+        .dashboard-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-icon {
+            font-size: 3rem;
+            filter: grayscale(100%) brightness(200%);
+        }
+
+        .dashboard-card-title {
+            font-size: 1rem;
+            color: #FFC107;
+            font-weight: 700;
+        }
+
+        .dashboard-card-value {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .low-stock-section {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+            border: 2px solid #333;
+        }
+
+        .low-stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #FFC107;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .low-stock-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #FFC107;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-filter {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid #333;
+            background: #000;
+            color: #FFC107;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-filter:hover {
+            border-color: #FFC107;
+            background: #1a1a1a;
+        }
+
+        .btn-filter.active {
+            background: #FFC107;
+            border-color: #FFC107;
+            color: #000;
+        }
+
+        .low-stock-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .low-stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+        }
+
+        .low-stock-table thead {
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            color: #000;
+        }
+
+        .low-stock-table th {
+            padding: 1rem 0.7rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border-left: 2px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .low-stock-table th:last-child {
+            border-left: none;
+        }
+
+        .low-stock-table tbody tr {
+            border-bottom: 2px solid #1a1a1a;
+            transition: all 0.2s;
+        }
+
+        .low-stock-table tbody tr:hover {
+            background: #1a1a1a;
+        }
+
+        .low-stock-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .low-stock-table td {
+            padding: 0.9rem 0.7rem;
+            text-align: center;
+            font-size: 0.9rem;
+            border-left: 2px solid #1a1a1a;
+            color: #FFC107;
+        }
+
+        .low-stock-table td:last-child {
+            border-left: none;
+        }
+
+        .low-stock-brand-cell {
+            font-weight: bold;
+            color: #FFC107;
+            text-align: right;
+            font-size: 1.05rem;
+        }
+
+        .low-stock-badge {
+            background: #FFC107;
+            color: #000;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .out-of-stock-badge {
+            background: #333;
+            color: #FFC107;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: inline-block;
+            border: 2px solid #FFC107;
+        }
+
+        .search-section {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+            border: 2px solid #333;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid #333;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            background: #000;
+            color: #FFC107;
+            font-weight: 600;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #FFC107;
+            box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.2);
+        }
+
+        .search-input::placeholder {
+            color: #666;
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            color: #000;
+            border: none;
+            padding: 1.2rem 2rem;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            font-size: 1rem;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.5);
+        }
+
+        .copy-success {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #FFC107;
+            color: #000;
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            box-shadow: 0 15px 50px rgba(255, 193, 7, 0.5);
+            z-index: 10000;
+            display: none;
+            animation: fadeInOut 2s ease-in-out;
+            border: 3px solid #000;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            10%, 90% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .suggestions {
+            background: #000;
+            border: 2px solid #FFC107;
+            border-radius: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid #333;
+            color: #FFC107;
+            font-weight: 600;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: #FFC107;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .results-section {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+            display: none;
+            margin-bottom: 2rem;
+            border: 2px solid #333;
+        }
+
+        .results-title {
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #FFC107;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #FFC107;
+        }
+
+        .results-grid {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+        }
+
+        .results-table thead {
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            color: #000;
+        }
+
+        .results-table th {
+            padding: 1.1rem 0.8rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            border-left: 2px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .results-table th:last-child {
+            border-left: none;
+        }
+
+        .results-table tbody tr {
+            border-bottom: 2px solid #1a1a1a;
+            transition: all 0.2s;
+        }
+
+        .results-table tbody tr:hover {
+            background: #1a1a1a;
+        }
+
+        .results-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .results-table td {
+            padding: 1.1rem 0.8rem;
+            text-align: center;
+            font-size: 0.95rem;
+            border-left: 2px solid #1a1a1a;
+            vertical-align: middle;
+            color: #FFC107;
+        }
+
+        .results-table td:last-child {
+            border-left: none;
+        }
+
+        .brand-cell {
+            font-weight: bold;
+            color: #FFC107;
+            text-align: right;
+            font-size: 1.1rem;
+        }
+
+        .size-cell {
+            font-weight: 700;
+            color: #FFD54F;
+            font-size: 1rem;
+        }
+
+        .price-cell {
+            font-weight: bold;
+            color: #FFC107;
+            font-size: 1rem;
+        }
+
+        .warehouse-cell {
+            font-size: 0.9rem;
+        }
+
+        .warehouse-stock-badge {
+            background: #FFC107;
+            color: #000;
+            padding: 0.4rem 0.7rem;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 0.2rem;
+            font-size: 0.85rem;
+        }
+
+        .drivers-cell {
+            text-align: right;
+            font-size: 0.9rem;
+            line-height: 1.9;
+        }
+
+        .driver-item {
+            display: inline-block;
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 0.5rem 0.7rem;
+            margin: 0.2rem;
+            transition: all 0.2s;
+        }
+
+        .driver-item:hover {
+            border-color: #FFC107;
+            background: #1a1a1a;
+        }
+
+        .driver-item-name {
+            font-weight: bold;
+            color: #FFC107;
+            margin-left: 0.4rem;
+        }
+
+        .driver-item-stock {
+            background: #FFC107;
+            color: #000;
+            padding: 0.3rem 0.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin: 0 0.2rem;
+        }
+
+        .warehouse-only-notice {
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 0.6rem 0.9rem;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 0.9rem;
+        }
+
+        .action-cell {
+            min-width: 120px;
+        }
+
+        .btn-copy-small {
+            background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .btn-copy-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 193, 7, 0.5);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #FFC107;
+        }
+
+        .no-results-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            filter: grayscale(100%) brightness(200%);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .spinner {
+            border: 5px solid #1a1a1a;
+            border-top: 5px solid #FFC107;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .auth-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .filter-buttons {
+                width: 100%;
+            }
+
+            .btn-filter {
+                flex: 1;
+            }
+
+            .low-stock-table {
+                font-size: 0.8rem;
+            }
+
+            .low-stock-table th,
+            .low-stock-table td {
+                padding: 0.7rem 0.4rem;
+            }
+
+            .results-table {
+                font-size: 0.85rem;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 0.85rem 0.6rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FFC107;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFD54F;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div id="authContainer" class="auth-container">
+   <div class="auth-card">
+    <div class="logo-container"><img src="https://i.top4top.io/p_35860o72q1.png" alt="شعار النظام" style="display: block; margin: 0 auto 1.5rem auto;" onerror="this.style.display='none'">
+     <div class="system-title">
+      ⚡ سيستم البطاريات ⚡
+     </div>
+    </div>
+    <div id="errorMessage" class="error-message"></div>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+     <div class="form-group"><label class="form-label">اسم المستخدم</label> <input type="text" id="username" class="form-input" placeholder="أدخل اسم المستخدم" required>
+     </div>
+     <div class="form-group"><label class="form-label">كلمة المرور</label> <input type="password" id="password" class="form-input" placeholder="أدخل كلمة المرور" required>
+     </div><button type="submit" class="btn-login">تسجيل الدخول</button>
+    </form>
+   </div>
+  </div>
+  <div id="mainContainer" class="main-container">
+   <header class="header">
+    <div class="header-content">
+     <div class="header-logo"><img src="https://i.top4top.io/p_35860o72q1.png" alt="شعار النظام" onerror="this.style.display='none'">
+      <div class="header-title" id="headerTitle">
+       ⚡ سيستم البطاريات ⚡
+      </div>
+     </div>
+     <div class="user-info">
+      <div class="user-badge" id="userBadge"></div><button class="btn-logout" onclick="handleLogout()">تسجيل الخروج</button>
+     </div>
+    </div>
+   </header>
+   <main class="content">
+    <div class="search-section">
+     <div class="search-box"><input type="text" id="searchInput" class="search-input" placeholder="🔋 ابحث عن مقاس البطارية مثال 95 أو DA95 أو AGM" oninput="handleSearchInput()" onfocus="handleSearchFocus()"> <button id="exportBtn" class="btn-export" onclick="openGoogleSheet()"> 📊 فتح القوقل شيت </button>
+     </div>
+     <div id="suggestions" class="suggestions"></div>
+    </div>
+    <div id="loading" class="loading">
+     <div class="spinner"></div>
+     <div style="color: #FFC107; font-weight: bold; font-size: 1.1rem;">
+      جاري تحميل البيانات...
+     </div>
+    </div>
+    <div id="results" class="results-section">
+     <div class="results-title" id="resultsTitle"></div>
+     <div id="resultsContent"></div>
+    </div>
+    <div id="dashboardSection" class="dashboard-section">
+     <div class="dashboard-grid">
+      <div class="dashboard-card">
+       <div class="dashboard-card-header">
+        <div class="dashboard-icon">
+         🔋
+        </div>
+        <div>
+         <div class="dashboard-card-title">
+          إجمالي البطاريات
+         </div>
+        </div>
+       </div>
+       <div class="dashboard-card-value" id="totalBatteries">
+        0
+       </div>
+      </div>
+      <div class="dashboard-card">
+       <div class="dashboard-card-header">
+        <div class="dashboard-icon">
+         📦
+        </div>
+        <div>
+         <div class="dashboard-card-title">
+          المخزون الرئيسي
+         </div>
+        </div>
+       </div>
+       <div class="dashboard-card-value" id="warehouseStock">
+        0
+       </div>
+      </div>
+      <div class="dashboard-card">
+       <div class="dashboard-card-header">
+        <div class="dashboard-icon">
+         🚚
+        </div>
+        <div>
+         <div class="dashboard-card-title">
+          مخزون السائقين
+         </div>
+        </div>
+       </div>
+       <div class="dashboard-card-value" id="driversStock">
+        0
+       </div>
+      </div>
+      <div class="dashboard-card">
+       <div class="dashboard-card-header">
+        <div class="dashboard-icon">
+         ⚠️
+        </div>
+        <div>
+         <div class="dashboard-card-title">
+          بطاريات منخفضة أو منتهية
+         </div>
+        </div>
+       </div>
+       <div class="dashboard-card-value" id="lowStock">
+        0
+       </div>
+      </div>
+     </div>
+     <div class="low-stock-section">
+      <div class="low-stock-header">
+       <div class="low-stock-title">
+        ⚠️ البطاريات المنخفضة أو المنتهية
+       </div>
+       <div class="filter-buttons"><button class="btn-filter active" onclick="filterLowStock('all')"> الكل </button> <button class="btn-filter" onclick="filterLowStock('out')"> منتهية فقط </button> <button class="btn-filter" onclick="filterLowStock('low')"> منخفضة فقط </button>
+       </div>
+      </div>
+      <div id="lowStockList" class="low-stock-list"></div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <div class="copy-success" id="copySuccess">
+   تم النسخ بنجاح ✓
+  </div>
+  <script>
+        const defaultConfig = {
+            system_title: "⚡ سيستم البطاريات ⚡",
+            search_placeholder: "🔋 ابحث عن مقاس البطارية"
+        };
+
+        let config = { ...defaultConfig };
+        
+        const SHEET_ID = '1WghSWhC-NJ0h--afoaR0ydzTP8ULw7N3tBDgToXoLVk';
+        const MAIN_SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
+
+        const USERS = {
+            Abdullah: { password: 'portarage1', role: 'كول سنتر', canExport: false },
+            Suaad: { password: 'portarage2', role: 'كول سنتر', canExport: false },
+            Laila: { password: 'portarage3', role: 'كول سنتر', canExport: false },
+            Nasser: { password: 'portarage4', role: 'كول سنتر', canExport: false },
+            Khalifa: { password: 'portarage5', role: 'كول سنتر', canExport: false },
+            Azam: { password: 'portarage6', role: 'كول سنتر', canExport: false },
+            Abdulwahab: { password: 'portarage7', role: 'كول سنتر', canExport: false },
+            Bashar: { password: 'portarage8', role: 'كول سنتر', canExport: false },
+            Ali: { password: 'portarage9', role: 'كول سنتر', canExport: false },
+            Sabah: { password: 'portarage10', role: 'كول سنتر', canExport: false },
+            Hamad: { password: 'portarage12', role: 'كول سنتر', canExport: false },
+            Fawzi: { password: 'portarage12', role: 'كول سنتر', canExport: false },
+            Mohamad: { password: 'portarage7896', role: 'المحاسب', canExport: true },
+            Salem: { password: 'portarage7887', role: 'المدير', canExport: true }
+        };
+
+        let currentUser = null;
+        let batteryData = [];
+        let driversArabicNames = {};
+        let allLowStockBatteries = [];
+        let currentFilter = 'all';
+        let autoRefreshInterval = null;
+
+        function getSupplierName(brand, type) {
+            const brandUpper = brand.toUpperCase();
+            
+            if (brandUpper.includes('VARTA')) {
+                return 'مورد فارتا';
+            } else if (brandUpper.includes('EMTRAC')) {
+                return 'مورد البحبطين';
+            } else {
+                return type === 'FK' ? 'مورد اف كي' : 'مورد افتخار';
+            }
+        }
+
+        function getBrandMessage(brand, salePrice, size) {
+            const brandUpper = brand.toUpperCase();
+            
+            if (brandUpper.includes('MOTER CRAFT') || brandUpper.includes('MOTOR CRAFT')) {
+                if (size === 'DA100' || size === '95AGM') {
+                    return `متوفرة بطارية موتر كرافت أمريكية 🇺🇸 كفالتها سنتين على الوكيل فورد الغانم سعرها ${salePrice} دك`;
+                } else {
+                    return `متوفرة بطارية موتر كرافت أمريكية 🇺🇸 كفالتها 3 سنوات على الوكيل فورد الغانم السعر مع رسوم التركيب ${salePrice} دك`;
+                }
+            } else if (brandUpper.includes('VARTA')) {
+                return `متوفرة بطارية فارتا ألمانية 🇩🇪 كفالتها سنة على الوكيل الفتو انترنشنل السعر مع رسوم التركيب ${salePrice} دك`;
+            } else if (brandUpper.includes('ABM')) {
+                return `متوفرة بطارية أيه بي أم ماليزية 🇲🇾 كفالتها سنة واحدة على الوكيل أف كي السعر مع رسوم التركيب ${salePrice} دك`;
+            } else if (brandUpper.includes('MOTO RAFT')) {
+                return `متوفرة بطارية موتر رفت هندية 🇮🇳 كفالتها سنة واحدة على الوكيل افتخار السعر مع رسوم التركيب ${salePrice} دك`;
+            } else if (brandUpper.includes('BOSSTER') || brandUpper.includes('BOOSTER')) {
+                return `متوفرة بطارية بوستر أو أو سي صينية 🇨🇳 كفالتها سنة واحدة على الوكيل المشعل السعر مع رسوم التركيب ${salePrice} دك`;
+            } else {
+                return `متوفرة بطارية ${brand} السعر ${salePrice} دك`;
+            }
+        }
+
+        function copyMessage(message) {
+            navigator.clipboard.writeText(message).then(() => {
+                const successDiv = document.getElementById('copySuccess');
+                successDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    successDiv.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('فشل النسخ:', err);
+            });
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMessage');
+
+            if (USERS[username] && USERS[username].password === password) {
+                currentUser = { username, ...USERS[username] };
+                
+                localStorage.setItem('batterySystemUser', JSON.stringify(currentUser));
+                
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+                document.getElementById('userBadge').textContent = `${currentUser.role}: ${username}`;
+                
+                if (currentUser.canExport) {
+                    document.getElementById('dashboardSection').style.display = 'block';
+                    document.getElementById('exportBtn').style.display = 'block';
+                } else {
+                    document.getElementById('dashboardSection').style.display = 'none';
+                    document.getElementById('exportBtn').style.display = 'none';
+                }
+
+                loadData();
+                startAutoRefresh();
+            } else {
+                errorMsg.textContent = '❌ اسم المستخدم أو كلمة المرور غير صحيحة';
+                errorMsg.style.display = 'block';
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            
+            localStorage.removeItem('batterySystemUser');
+            
+            stopAutoRefresh();
+            
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('searchInput').value = '';
+        }
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim().replace(/^"|"$/g, ''));
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim().replace(/^"|"$/g, ''));
+            return result;
+        }
+
+        async function loadData(silent = false) {
+            if (!silent) {
+                document.getElementById('loading').style.display = 'block';
+            }
+            
+            try {
+                await Promise.all([
+                    loadDriversData(),
+                    loadMainData()
+                ]);
+            } catch (error) {
+                console.error('خطأ في تحميل البيانات:', error);
+            } finally {
+                if (!silent) {
+                    document.getElementById('loading').style.display = 'none';
+                }
+            }
+        }
+
+        function startAutoRefresh() {
+            stopAutoRefresh();
+            
+            autoRefreshInterval = setInterval(() => {
+                loadData(true);
+            }, 60000);
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        async function loadDriversData() {
+            try {
+                const predefinedNames = {
+                    'NYAZ': 'نياز',
+                    'Muthu': 'موتو',
+                    'Ganesh': 'جانيش',
+                    'Iresh-KESAVAN': 'اريش-كيسافان',
+                    'GUFRAN': 'غفران',
+                    'edeson alpert': 'إيديسون ألبرت',
+                    'Irfan': 'عرفان',
+                    'Albert': 'ألبرت',
+                    'Lakshman': 'لاكشمان',
+                    'santheel': 'سانثيل',
+                    'ARVENTH': 'أرفنت',
+                    'MortaDA/Santhosh': 'مرتضى / سانتوش',
+                    'Mayura': 'مايورا',
+                    'yusuf & rahimah allah': 'يوسف و رحمة الله',
+                    'Ali and Sayed': 'علي وسيد',
+                    'Sayid and Ramos': 'سيد ورامس',
+                    'bala': 'بالا',
+                    'Durga Prasad': 'دورجا براساد'
+                };
+                
+                Object.assign(driversArabicNames, predefinedNames);
+                
+                console.log('تم تحميل أسماء السائقين:', driversArabicNames);
+            } catch (error) {
+                console.error('خطأ في تحميل أسماء السائقين:', error);
+            }
+        }
+
+        async function loadMainData() {
+            try {
+                const response = await fetch(MAIN_SHEET_URL);
+                const text = await response.text();
+                const rows = text.split('\n').filter(row => row.trim());
+                
+                const headers = parseCSVLine(rows[0]);
+                
+                console.log('عناوين الأعمدة:', headers);
+                console.log('عدد الأعمدة:', headers.length);
+
+                batteryData = [];
+
+                for (let rowIndex = 1; rowIndex < rows.length; rowIndex++) {
+                    const cols = parseCSVLine(rows[rowIndex]);
+                    
+                    const battery = {
+                        rowIndex: rowIndex,
+                        size: cols[0] || '',
+                        brand: cols[1] || '',
+                        tradeName: cols[2] || '',
+                        price: parseFloat(cols[3]) || 0,
+                        salePrice: parseFloat(cols[4]) || 0,
+                        fkStock: parseFloat(cols[5]) || 0,
+                        mStock: parseFloat(cols[6]) || 0,
+                        drivers: [],
+                        fkSupplierName: '',
+                        mSupplierName: ''
+                    };
+                    
+                    battery.fkSupplierName = getSupplierName(battery.brand, 'FK');
+                    battery.mSupplierName = getSupplierName(battery.brand, 'M');
+
+                    for (let colIndex = 7; colIndex < headers.length; colIndex += 2) {
+                        const driverHeader = headers[colIndex];
+                        
+                        if (driverHeader && driverHeader.trim() !== '') {
+                            const driverEnglishName = driverHeader.trim();
+                            
+                            if (driverEnglishName.toLowerCase() === 'total') {
+                                continue;
+                            }
+                            
+                            const fkQty = parseFloat(cols[colIndex]) || 0;
+                            const mQty = parseFloat(cols[colIndex + 1]) || 0;
+                            
+                            if (fkQty > 0 || mQty > 0) {
+                                const driverArabicName = driversArabicNames[driverEnglishName] || driverEnglishName;
+                                
+                                battery.drivers.push({
+                                    name: driverArabicName,
+                                    englishName: driverEnglishName,
+                                    fk: fkQty,
+                                    m: mQty,
+                                    fkSupplierName: battery.fkSupplierName,
+                                    mSupplierName: battery.mSupplierName
+                                });
+                            }
+                        }
+                    }
+
+                    if (battery.size) {
+                        batteryData.push(battery);
+                    }
+                }
+
+                console.log('تم تحميل عدد البطاريات:', batteryData.length);
+
+                if (currentUser && currentUser.canExport) {
+                    updateDashboard();
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل البيانات الرئيسية:', error);
+            }
+        }
+
+        function updateDashboard() {
+            let totalWarehouse = 0;
+            let totalDrivers = 0;
+            allLowStockBatteries = [];
+
+            batteryData.forEach(battery => {
+                const warehouseTotal = battery.fkStock + battery.mStock;
+                totalWarehouse += warehouseTotal;
+
+                let driversTotal = 0;
+                battery.drivers.forEach(driver => {
+                    driversTotal += driver.fk + driver.m;
+                });
+                totalDrivers += driversTotal;
+
+                const totalStock = warehouseTotal + driversTotal;
+                
+                if (totalStock === 0 || totalStock <= 3) {
+                    allLowStockBatteries.push({
+                        ...battery,
+                        totalStock: totalStock
+                    });
+                }
+            });
+
+            document.getElementById('totalBatteries').textContent = batteryData.length;
+            document.getElementById('warehouseStock').textContent = totalWarehouse;
+            document.getElementById('driversStock').textContent = totalDrivers;
+            document.getElementById('lowStock').textContent = allLowStockBatteries.length;
+
+            allLowStockBatteries.sort((a, b) => a.totalStock - b.totalStock);
+            displayLowStock(currentFilter);
+        }
+
+        function filterLowStock(filter) {
+            currentFilter = filter;
+            
+            document.querySelectorAll('.btn-filter').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            displayLowStock(filter);
+        }
+
+        function displayLowStock(filter) {
+            const lowStockList = document.getElementById('lowStockList');
+            let filteredBatteries = [];
+
+            if (filter === 'all') {
+                filteredBatteries = allLowStockBatteries;
+            } else if (filter === 'out') {
+                filteredBatteries = allLowStockBatteries.filter(b => b.totalStock === 0);
+            } else if (filter === 'low') {
+                filteredBatteries = allLowStockBatteries.filter(b => b.totalStock > 0 && b.totalStock <= 3);
+            }
+            
+            if (filteredBatteries.length === 0) {
+                const message = filter === 'out' ? 'لا توجد بطاريات منتهية' : 
+                               filter === 'low' ? 'لا توجد بطاريات منخفضة' : 
+                               'لا توجد بطاريات منخفضة أو منتهية';
+                
+                lowStockList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #FFC107;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">✓</div>
+                        <div style="font-size: 1.4rem; font-weight: bold;">جميع البطاريات في حالة جيدة</div>
+                        <div style="color: #999; margin-top: 0.5rem; font-size: 1.1rem;">${message}</div>
+                    </div>
+                `;
+            } else {
+                lowStockList.innerHTML = `
+                    <table class="low-stock-table">
+                        <thead>
+                            <tr>
+                                <th>البطارية والمقاس</th>
+                                <th>سعر البيع 💵</th>
+                                <th>المخزون 📦</th>
+                                <th>السائقين 🚚</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filteredBatteries.map(battery => `
+                                <tr>
+                                    <td class="low-stock-brand-cell">${battery.brand} - ${battery.size}</td>
+                                    <td>${battery.salePrice} دك</td>
+                                    <td>${battery.fkStock + battery.mStock}</td>
+                                    <td>${battery.drivers.reduce((sum, d) => sum + d.fk + d.m, 0)}</td>
+                                    <td>
+                                        ${battery.totalStock === 0 
+                                            ? '<span class="out-of-stock-badge">منتهية</span>'
+                                            : `<span class="low-stock-badge">متبقي ${battery.totalStock}</span>`
+                                        }
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+        }
+
+        function handleSearchInput() {
+            const input = document.getElementById('searchInput').value.trim().toUpperCase();
+            const suggestionsDiv = document.getElementById('suggestions');
+
+            if (input.length === 0) {
+                suggestionsDiv.style.display = 'none';
+                document.getElementById('results').style.display = 'none';
+                return;
+            }
+
+            const matches = [...new Set(batteryData
+                .filter(b => b.size.toUpperCase().includes(input))
+                .map(b => b.size)
+            )];
+
+            if (matches.length > 0) {
+                suggestionsDiv.innerHTML = matches
+                    .map(size => `<div class="suggestion-item" onclick="selectSize('${size}')">${size}</div>`)
+                    .join('');
+                suggestionsDiv.style.display = 'block';
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        }
+
+        function handleSearchFocus() {
+            const input = document.getElementById('searchInput').value.trim();
+            if (input.length > 0) {
+                handleSearchInput();
+            }
+        }
+
+        function selectSize(size) {
+            document.getElementById('searchInput').value = size;
+            document.getElementById('suggestions').style.display = 'none';
+            searchBatteries(size);
+        }
+
+        function searchBatteries(size) {
+            const results = batteryData.filter(b => 
+                b.size.toUpperCase() === size.toUpperCase() &&
+                (b.fkStock > 0 || b.mStock > 0 || b.drivers.length > 0)
+            );
+
+            const resultsDiv = document.getElementById('results');
+            const resultsContent = document.getElementById('resultsContent');
+            const resultsTitle = document.getElementById('resultsTitle');
+            const isReader = currentUser && !currentUser.canExport;
+
+            if (results.length === 0) {
+                resultsContent.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔋</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد نتائج</div>
+                        <div style="font-size: 1.1rem;">لم يتم العثور على بطاريات متوفرة بمقاس ${size}</div>
+                    </div>
+                `;
+            } else {
+                resultsTitle.textContent = `🔍 نتائج البحث عن مقاس: ${size}`;
+                
+                resultsContent.innerHTML = `
+                    <div class="results-grid">
+                        <table class="results-table">
+                            <thead>
+                                <tr>
+                                    <th>الماركة</th>
+                                    <th>المقاس</th>
+                                    ${isReader ? '' : '<th>السعر 💰</th>'}
+                                    <th>سعر البيع 💵</th>
+                                    <th>المخزون الرئيسي 📦</th>
+                                    <th>مخزون السائقين 🚚</th>
+                                    ${isReader ? '<th>إجراء</th>' : ''}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${results.map(battery => {
+                                    const brandMessage = getBrandMessage(battery.brand, battery.salePrice, battery.size);
+                                    const onlyInWarehouse = battery.drivers.length === 0;
+                                    
+                                    let warehouseContent = '';
+                                    if (battery.fkStock > 0) {
+                                        warehouseContent += `<span class="warehouse-stock-badge">${battery.fkSupplierName}: ${battery.fkStock}</span>`;
+                                    }
+                                    if (battery.mStock > 0) {
+                                        warehouseContent += `<span class="warehouse-stock-badge">${battery.mSupplierName}: ${battery.mStock}</span>`;
+                                    }
+                                    if (!warehouseContent) {
+                                        warehouseContent = '-';
+                                    }
+                                    
+                                    let driversContent = '';
+                                    if (onlyInWarehouse) {
+                                        driversContent = '<div class="warehouse-only-notice">في المورد فقط ❗</div>';
+                                    } else {
+                                        driversContent = battery.drivers.map(driver => {
+                                            let driverInfo = '';
+                                            if (driver.fk > 0) {
+                                                driverInfo += `<span class="driver-item-stock">${driver.fkSupplierName}: ${driver.fk}</span>`;
+                                            }
+                                            if (driver.m > 0) {
+                                                driverInfo += `<span class="driver-item-stock">${driver.mSupplierName}: ${driver.m}</span>`;
+                                            }
+                                            return `<div class="driver-item"><span class="driver-item-name">${driver.name}</span>${driverInfo}</div>`;
+                                        }).join('');
+                                    }
+                                    
+                                    return `
+                                        <tr>
+                                            <td class="brand-cell">${battery.brand}</td>
+                                            <td class="size-cell">${battery.size}</td>
+                                            ${isReader ? '' : `<td class="price-cell">${battery.price} دك</td>`}
+                                            <td class="price-cell">${battery.salePrice} دك</td>
+                                            <td class="warehouse-cell">${warehouseContent}</td>
+                                            <td class="drivers-cell">${driversContent}</td>
+                                            ${isReader ? `
+                                                <td class="action-cell">
+                                                    <button class="btn-copy-small" onclick='copyMessage(\`${brandMessage}\`)'>
+                                                        📋 نسخ
+                                                    </button>
+                                                </td>
+                                            ` : ''}
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            resultsDiv.style.display = 'block';
+        }
+
+        function openGoogleSheet() {
+            if (!currentUser || !currentUser.canExport) {
+                return;
+            }
+
+            const sheetUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
+            window.open(sheetUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        async function onConfigChange(newConfig) {
+            const headerTitle = document.getElementById('headerTitle');
+            const searchInput = document.getElementById('searchInput');
+            
+            if (headerTitle) {
+                headerTitle.textContent = newConfig.system_title || defaultConfig.system_title;
+            }
+            
+            if (searchInput) {
+                searchInput.placeholder = newConfig.search_placeholder || defaultConfig.search_placeholder;
+            }
+        }
+
+        function mapToCapabilities(cfg) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(cfg) {
+            return new Map([
+                ["system_title", cfg.system_title || defaultConfig.system_title],
+                ["search_placeholder", cfg.search_placeholder || defaultConfig.search_placeholder]
+            ]);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('batterySystemUser');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('mainContainer').style.display = 'block';
+                    document.getElementById('userBadge').textContent = `${currentUser.role}: ${currentUser.username}`;
+                    
+                    if (currentUser.canExport) {
+                        document.getElementById('dashboardSection').style.display = 'block';
+                        document.getElementById('exportBtn').style.display = 'block';
+                    } else {
+                        document.getElementById('dashboardSection').style.display = 'none';
+                        document.getElementById('exportBtn').style.display = 'none';
+                    }
+                    
+                    loadData();
+                    startAutoRefresh();
+                } catch (error) {
+                    console.error('خطأ في استرجاع بيانات المستخدم:', error);
+                    localStorage.removeItem('batterySystemUser');
+                }
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#searchInput') && !e.target.closest('#suggestions')) {
+                document.getElementById('suggestions').style.display = 'none';
+            }
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a99d77d67b97cc9',t:'MTc2NTAwMzc1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
