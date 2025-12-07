@@ -932,7 +932,7 @@
       🔋 ابحث عن مقاس البطارية
      </div>
      <div class="dropdown-group"><label class="dropdown-label">🔋 اختر أو اكتب مقاس البطارية</label>
-      <div class="dropdown-container"><input type="text" id="sizeInput" class="dropdown-input" placeholder="مثال: DA95, LN5, 70D23L..." autocomplete="off" oninput="filterDropdown('size')" onfocus="showDropdown('size')"> <span class="dropdown-arrow" id="sizeArrow">▼</span>
+      <div class="dropdown-container"><input type="text" id="sizeInput" class="dropdown-input" placeholder="مثال: DA95, 74agm , da, agm..." autocomplete="off" oninput="filterDropdown('size')" onfocus="showDropdown('size')"> <span class="dropdown-arrow" id="sizeArrow">▼</span>
        <div id="sizeList" class="dropdown-list"></div>
       </div>
      </div>
@@ -1070,7 +1070,7 @@
             Suaad: { password: 'portarage2', role: 'كول سنتر', isStaff: true },
             Laila: { password: 'portarage3', role: 'كول سنتر', isStaff: true },
             Nasser: { password: 'portarage4', role: 'كول سنتر', isStaff: true },
-            Khalifa: { password: 'portarage5', role: 'كول سنتر', isStaff: true },
+            Khalifa: { password: 'portarage11', role: 'كول سنتر', isStaff: true },
             Azam: { password: 'portarage6', role: 'كول سنتر', isStaff: true },
             Abdulwahab: { password: 'portarage7', role: 'كول سنتر', isStaff: true },
             Bashar: { password: 'portarage8', role: 'كول سنتر', isStaff: true },
@@ -1117,11 +1117,11 @@
             const brandUpper = brand.toUpperCase();
             
             if (brandUpper.includes('VARTA')) {
-                return 'مورد فارتا';
+                return ' فارتا';
             } else if (brandUpper.includes('EMTRAC')) {
-                return 'مورد البحبطين';
+                return ' البابطين';
             } else {
-                return type === 'FK' ? 'مورد اف كي' : 'مورد افتخار';
+                return type === 'FK' ? ' اف كي' : ' افتخار';
             }
         }
 
@@ -1786,7 +1786,7 @@
             
             headerRow += `
                 <th>سعر البيع 💵</th>
-                <th>المخزون الرئيسي 📦</th>
+                <th>المخزون 📦</th>
                 <th>مخزون السائقين ����</th>`;
             
             if (showCopyButton) {
@@ -1815,7 +1815,7 @@
                             
                             let driversContent = '';
                             if (onlyInWarehouse) {
-                                driversContent = '<div class="warehouse-only-notice">في المورد فقط ❗</div>';
+                                driversContent = '<div class="warehouse-only-notice">في المخزن فقط ❗</div>';
                             } else {
                                 driversContent = battery.drivers.map(driver => {
                                     let driverInfo = '';
