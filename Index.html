@@ -1157,11 +1157,11 @@
             const brandUpper = brand.toUpperCase();
             
             if (brandUpper.includes('VARTA')) {
-                return 'مورد فارتا';
+                return ' فارتا';
             } else if (brandUpper.includes('EMTRAC')) {
-                return 'مورد البحبطين';
+                return ' البابطين';
             } else {
-                return type === 'FK' ? 'مورد اف كي' : 'مورد افتخار';
+                return type === 'FK' ? ' اف كي' : ' افتخار';
             }
         }
 
@@ -1857,7 +1857,7 @@
                             
                             let driversContent = '';
                             if (onlyInWarehouse) {
-                                driversContent = '<div class="warehouse-only-notice">في المورد فقط ❗</div>';
+                                driversContent = '<div class="warehouse-only-notice">في المخزن فقط ❗</div>';
                             } else {
                                 driversContent = battery.drivers.map(driver => {
                                     let driverInfo = '';
