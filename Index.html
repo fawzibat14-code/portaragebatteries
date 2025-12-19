@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بطاريات بورتراج</title>
+  <title>نظام البحث عن بطاريات السيارات</title>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -963,7 +963,7 @@
       <div class="dashboard-title-row">
        <div class="dashboard-title" id="dashboardTitle">
         🔋 لوحة التحكم
-       </div><button class="btn-sheet" onclick="openGoogleSheet()"> 📊 فتح القوقل شيت </button>
+       </div><button class="btn-sheet" onclick="openGoogleSheet()"> 📊 فتح القوقل ��يت </button>
       </div>
       <div class="stats-grid">
        <div class="stat-card">
@@ -996,7 +996,7 @@
          0
         </div>
         <div class="stat-label">
-         مخزون السائقين
+         م��زون السائقين
         </div>
        </div>
        <div class="stat-card">
@@ -1018,7 +1018,7 @@
         ⚠️ البطاريات المنخفضة أو المنتهية
        </div>
        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <div class="filter-buttons"><button class="filter-btn active" onclick="filterLowStock('all')">الكل</button> <button class="filter-btn" onclick="filterLowStock('out')">منتهية فقط</button> <button class="filter-btn" onclick="filterLowStock('low')">منخفضة فقط</button>
+        <div class="filter-buttons"><button class="filter-btn active" onclick="filterLowStock('all')">الكل</button> <button class="filter-btn" onclick="filterLowStock('out')">منتهية ����ط</button> <button class="filter-btn" onclick="filterLowStock('low')">منخفضة فقط</button>
         </div><button class="btn-export-excel" onclick="exportOutOfStockToExcel()"> 📥 تصدير Excel </button>
        </div>
       </div>
@@ -1071,7 +1071,6 @@
             Laila: { password: 'portarage3', role: 'كول سنتر', isStaff: true },
             Nasser: { password: 'portarage4', role: 'كول سنتر', isStaff: true },
             Khalifa: { password: 'portarage5', role: 'كول سنتر', isStaff: true },
-           YOUSEF: { password: 'Barcelona', role: 'برشلوني', isStaff: true },
             Azam: { password: 'portarage6', role: 'كول سنتر', isStaff: true },
             Abdulwahab: { password: 'portarage7', role: 'كول سنتر', isStaff: true },
             Bashar: { password: 'portarage8', role: 'كول سنتر', isStaff: true },
@@ -1079,7 +1078,6 @@
             Sabah: { password: 'portarage10', role: 'كول سنتر', isStaff: true },
             Hamad: { password: 'portarage12', role: 'كول سنتر', isStaff: true },
             Fawzi: { password: 'portarage12', role: 'كول سنتر', isStaff: true },
-            esraa: { password: 'portarage10', role: 'تيم ليدر', isStaff: true },
             Mohamad: { password: 'portarage7896', role: 'المحاسب', isStaff: false },
             Salem: { password: 'portarage7887', role: 'المدير', isStaff: false }
         };
@@ -1158,11 +1156,11 @@
             const brandUpper = brand.toUpperCase();
             
             if (brandUpper.includes('VARTA')) {
-                return ' فارتا';
+                return 'مورد فارتا';
             } else if (brandUpper.includes('EMTRAC')) {
-                return ' البابطين';
+                return 'مورد البحبطين';
             } else {
-                return type === 'FK' ? ' اف كي' : ' افتخار';
+                return type === 'FK' ? 'مورد اف كي' : 'مورد افتخار';
             }
         }
 
@@ -1307,7 +1305,7 @@
                     'MortaDA/Santhosh': 'مرتضى / سانتوش',
                     'Mayura': 'مايورا',
                     'yusuf & rahimah allah': 'يوسف و رحمة الله',
-                    'Ali and Sayed': 'علي وسيد',
+                    'Ali and Sayed': 'علي وس��د',
                     'Sayid and Ramos': 'سيد ورامو',
                     'bala': 'بالا',
                     'Durga Prasad': 'دورجا براساد'
@@ -1713,7 +1711,7 @@
                     <div style="text-align: center; padding: 3rem; color: #FFC107;">
                         <div style="font-size: 4rem; margin-bottom: 1rem;">❌</div>
                         <div style="font-size: 1.4rem; font-weight: bold;">لا توجد نتائج</div>
-                        <div style="color: #999; margin-top: 0.5rem;">لم يتم العثور على بطاريات لهذه السيارة</div>
+                        <div style="color: #999; margin-top: 0.5rem;">لم يتم العثور على بطا��يات لهذه السيارة</div>
                     </div>
                 `;
             } else {
@@ -1858,7 +1856,7 @@
                             
                             let driversContent = '';
                             if (onlyInWarehouse) {
-                                driversContent = '<div class="warehouse-only-notice">في المخزن فقط ❗</div>';
+                                driversContent = '<div class="warehouse-only-notice">في المورد فقط ❗</div>';
                             } else {
                                 driversContent = battery.drivers.map(driver => {
                                     let driverInfo = '';
@@ -1943,9 +1941,38 @@
                 message = `متوفرة بطارية ${brand} السعر مع رسوم التركيب ${salePrice} دك`;
             }
             
-            navigator.clipboard.writeText(message).then(() => {
-                const btn = event.target.closest('.copy-btn');
-                const originalText = btn.innerHTML;
+            const btn = event.target.closest('.copy-btn');
+            const originalText = btn.innerHTML;
+            
+            // طريقة بديلة للنسخ تعمل في الـ iframe
+            const textarea = document.createElement('textarea');
+            textarea.value = message;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '0';
+            textarea.style.left = '0';
+            textarea.style.width = '2em';
+            textarea.style.height = '2em';
+            textarea.style.padding = '0';
+            textarea.style.border = 'none';
+            textarea.style.outline = 'none';
+            textarea.style.boxShadow = 'none';
+            textarea.style.background = 'transparent';
+            textarea.style.opacity = '0';
+            
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            
+            let success = false;
+            try {
+                success = document.execCommand('copy');
+            } catch (err) {
+                console.error('فشل النسخ:', err);
+            }
+            
+            document.body.removeChild(textarea);
+            
+            if (success) {
                 btn.classList.add('copied');
                 btn.innerHTML = '✅ تم النسخ';
                 
@@ -1953,9 +1980,31 @@
                     btn.classList.remove('copied');
                     btn.innerHTML = originalText;
                 }, 2000);
-            }).catch(err => {
-                console.error('فشل النسخ:', err);
-            });
+            } else {
+                // محاولة استخدام clipboard API كبديل
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(message).then(() => {
+                        btn.classList.add('copied');
+                        btn.innerHTML = '✅ تم النسخ';
+                        
+                        setTimeout(() => {
+                            btn.classList.remove('copied');
+                            btn.innerHTML = originalText;
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('فشل النسخ عبر clipboard API:', err);
+                        btn.innerHTML = '❌ فشل النسخ';
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                        }, 2000);
+                    });
+                } else {
+                    btn.innerHTML = '❌ فشل النسخ';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                    }, 2000);
+                }
+            }
         }
 
         function showDropdown(type) {
@@ -2139,5 +2188,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ab22dbb75007cc9',t:'MTc2NTI1ODk0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b079058e22351ca',t:'MTc2NjE1NDI2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
